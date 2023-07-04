@@ -39,9 +39,10 @@ void UBoidsRenderProcessor::ConfigureQueries()
 		.AddRequirement<FMassVelocityFragment>(EMassFragmentAccess::ReadOnly, EMassFragmentPresence::All)
 		.AddTagRequirement<FBoidsSpawnTag>(EMassFragmentPresence::Optional)
 		.AddConstSharedRequirement<FBoidsMeshFragment>(EMassFragmentPresence::All);
+	Entities.RegisterWithProcessor(*this);
 }
 
-void UBoidsRenderProcessor::Execute(UMassEntitySubsystem& EntitySubsystem, FMassExecutionContext& Context)
+void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExecutionContext& Context)
 {
 	QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidsRenderProcessor);
 	

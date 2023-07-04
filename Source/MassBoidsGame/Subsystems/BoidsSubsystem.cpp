@@ -20,13 +20,14 @@ void UBoidsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	UWorld* MyWorld = GetWorld();
 	check(MyWorld);
 	
-	SimulationSubsystem = UWorld::GetSubsystem<UMassSimulationSubsystem>(MyWorld);
+	SimulationSubsystem = MyWorld->GetSubsystem<UMassSimulationSubsystem>(MyWorld);
 	check(SimulationSubsystem);
 	
-	EntitySubsystem = UWorld::GetSubsystem<UMassEntitySubsystem>(MyWorld);
+	//EntitySubsystem = UWorld::GetSubsystem<UMassEntitySubsystem>(MyWorld);
+	EntitySubsystem = MyWorld->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager().AsShared();
 	check(EntitySubsystem);
 
-	// Create Command buffers for each processing phase and bind the flush command
+	 //Create Command buffers for each processing phase and bind the flush command
 	for (int32 Ndx = 0; Ndx < static_cast<int32>(EMassProcessingPhase::MAX); Ndx++)
 	{
 		EMassProcessingPhase Phase = static_cast<EMassProcessingPhase>(Ndx);
@@ -42,6 +43,7 @@ void UBoidsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 void UBoidsSubsystem::Deinitialize()
 {
+	EntitySubsystem.Reset();
 	// Unbind the ProcessingPhase event delegates
 	for (auto&& PairIt : ProcessingPhaseFinishedHandle)
 	{

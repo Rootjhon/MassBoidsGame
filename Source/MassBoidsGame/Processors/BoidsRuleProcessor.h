@@ -33,7 +33,8 @@ class MASSBOIDSGAME_API UBoidsRuleProcessor : public UMassProcessor
 	// ~ begin UMassProcessor interface
 	virtual void Initialize(UObject& Owner) override;
 	virtual void ConfigureQueries() override;
-	virtual void Execute(UMassEntitySubsystem& EntitySubsystem, FMassExecutionContext& Context) override;
+	//virtual void Execute(UMassEntitySubsystem& EntitySubsystem, FMassExecutionContext& Context) override;
+	virtual void Execute(FMassEntityManager& EntityManager, FMassExecutionContext& Context) override;
 	// ~ end UMassProcessor interface
 
 	void SetupBoidsGrid(TArray<const FVector*>& BoidLocations, const int32 NumBoids);

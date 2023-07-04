@@ -23,13 +23,14 @@ void UBoidsMoveProcessor::ConfigureQueries()
 		.AddRequirement<FBoidsLocationFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All)
 		.AddRequirement<FMassVelocityFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All)
 		.AddRequirement<FBoidsSpeedFragment>(EMassFragmentAccess::ReadOnly, EMassFragmentPresence::All);
+	Entities.RegisterWithProcessor(*this);
 }
 
-void UBoidsMoveProcessor::Execute(UMassEntitySubsystem& EntitySubsystem, FMassExecutionContext& Context)
+void UBoidsMoveProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExecutionContext& Context)
 {
 	QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidsMoveProcessor);
 
-	Entities.ParallelForEachEntityChunk(EntitySubsystem, Context, [] (FMassExecutionContext& Context)
+	Entities.ForEachEntityChunk(EntitySubsystem, Context, [] (FMassExecutionContext& Context)
 	{
 		const TArrayView<FBoidsLocationFragment>& Locations = Context.GetMutableFragmentView<FBoidsLocationFragment>();
 		const TArrayView<FMassVelocityFragment>& Velocities = Context.GetMutableFragmentView<FMassVelocityFragment>();

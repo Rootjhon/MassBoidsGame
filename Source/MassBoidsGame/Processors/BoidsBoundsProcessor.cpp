@@ -32,13 +32,14 @@ void UBoidsBoundsProcessor::ConfigureQueries()
 	Entities
 		.AddRequirement<FBoidsLocationFragment>(EMassFragmentAccess::ReadOnly, EMassFragmentPresence::All)
 		.AddRequirement<FMassVelocityFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All);
+	Entities.RegisterWithProcessor(*this);
 }
 
-void UBoidsBoundsProcessor::Execute(UMassEntitySubsystem& EntitySubsystem, FMassExecutionContext& Context)
+void UBoidsBoundsProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExecutionContext& Context)
 {
 	QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidsBoundsProcessor);
 	
-	Entities.ParallelForEachEntityChunk(EntitySubsystem, Context, [this] (FMassExecutionContext& Context)
+	Entities.ForEachEntityChunk(EntitySubsystem, Context, [this] (FMassExecutionContext& Context)
 	{
 		const FVector MinExtent = FVector(-(BoidsSettings->Extent / 2.f));
 		const FVector MaxExtent = FVector((BoidsSettings->Extent / 2.f));

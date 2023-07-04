@@ -38,9 +38,11 @@ void UBoidsSpawnProcessor::ConfigureQueries()
 		.AddRequirement<FMassVelocityFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All)
 		.AddRequirement<FBoidsSpeedFragment>(EMassFragmentAccess::ReadOnly, EMassFragmentPresence::All)
 		.AddTagRequirement<FBoidsSpawnTag>(EMassFragmentPresence::All);
+
+	Entities.RegisterWithProcessor(*this);
 }
 
-void UBoidsSpawnProcessor::Execute(UMassEntitySubsystem& EntitySubsystem, FMassExecutionContext& Context)
+void UBoidsSpawnProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExecutionContext& Context)
 {
 	QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidsSpawnLocationProcessor);
 
@@ -49,7 +51,7 @@ void UBoidsSpawnProcessor::Execute(UMassEntitySubsystem& EntitySubsystem, FMassE
 		return;
 	}
 	
-	const UWorld* World = EntitySubsystem.GetWorld();
+	const UWorld* World = GetWorld();
 	check(World);
 	
 	if (World->GetNetMode() != NM_Client)

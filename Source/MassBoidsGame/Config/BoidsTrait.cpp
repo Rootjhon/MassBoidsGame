@@ -12,10 +12,12 @@
 #include "Engine/World.h"
 
 
-void UBoidsTrait::BuildTemplate(FMassEntityTemplateBuildContext& BuildContext, UWorld& World) const
+void UBoidsTrait::BuildTemplate(FMassEntityTemplateBuildContext& BuildContext, const UWorld& World) const
 {
-	UMassEntitySubsystem* EntitySubsystem = UWorld::GetSubsystem<UMassEntitySubsystem>(&World);
-	check(EntitySubsystem);
+	//UMassEntitySubsystem* EntitySubsystem = UWorld::GetSubsystem<UMassEntitySubsystem>(&World);
+	//check(EntitySubsystem);
+
+	TSharedPtr<FMassEntityManager> EntityManager = World.GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager().AsShared();
 
 	BuildContext.AddTag<FBoidsSpawnTag>();
 	BuildContext.AddFragment<FBoidsLocationFragment>();
@@ -25,7 +27,9 @@ void UBoidsTrait::BuildTemplate(FMassEntityTemplateBuildContext& BuildContext, U
 	// Mesh Shared Fragment
 	{
 		const uint32 SharedHash = UE::StructUtils::GetStructCrc32(FConstStructView::Make(Mesh));
-		const FConstSharedStruct SharedFragment = EntitySubsystem->GetOrCreateConstSharedFragment(SharedHash, Mesh);
+		//const FConstSharedStruct SharedFragment = EntitySubsystem->GetOrCreateConstSharedFragment(SharedHash, Mesh);
+		const FConstSharedStruct SharedFragment = EntityManager->GetOrCreateConstSharedFragmentByHash(SharedHash, Mesh);
+
 		BuildContext.AddConstSharedFragment(SharedFragment);
 	}
 }

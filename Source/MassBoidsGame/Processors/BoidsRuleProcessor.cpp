@@ -35,9 +35,10 @@ void UBoidsRuleProcessor::ConfigureQueries()
 	Entities
 		.AddRequirement<FBoidsLocationFragment>(EMassFragmentAccess::ReadOnly, EMassFragmentPresence::All)
 		.AddRequirement<FMassVelocityFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All);
+	Entities.RegisterWithProcessor(*this);
 }
 
-void UBoidsRuleProcessor::Execute(UMassEntitySubsystem& EntitySubsystem, FMassExecutionContext& Context)
+void UBoidsRuleProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExecutionContext& Context)
 {
 	QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidsRuleProcessor);
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MassEntitySubsystem.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "MassProcessingTypes.h"
 #include "Actors/BoidsRenderActor.h"
@@ -29,8 +30,11 @@ class MASSBOIDSGAME_API UBoidsSubsystem : public UWorldSubsystem
 	UPROPERTY(Transient)
 	UMassSimulationSubsystem* SimulationSubsystem;
 
-	UPROPERTY(Transient)
-	UMassEntitySubsystem* EntitySubsystem;
+	//UPROPERTY(Transient)
+	//FMassEntityManager* EntitySubsystem;
+
+	TSharedPtr<FMassEntityManager> EntitySubsystem;
+
 
 	UPROPERTY(Transient)
 	ABoidsRenderActor* RenderActor;

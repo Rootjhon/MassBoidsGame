@@ -26,6 +26,7 @@ class MASSBOIDSGAME_API UBoidsTrait : public UMassEntityTraitBase
 	FBoidsMeshFragment Mesh;
 	
 	// ~ begin UMassEntityTraitBase interface
-	virtual void BuildTemplate(FMassEntityTemplateBuildContext& BuildContext, UWorld& World) const override;
+	//virtual void BuildTemplate(FMassEntityTemplateBuildContext& BuildContext, UWorld& World) const override;
+	virtual void BuildTemplate(FMassEntityTemplateBuildContext& BuildContext, const UWorld& World) const override;
 	// ~ end UMassEntityTraitBase interface
 };
