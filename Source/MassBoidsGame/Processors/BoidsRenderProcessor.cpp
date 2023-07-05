@@ -93,7 +93,11 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 			{
 				UInstancedStaticMeshComponent* RenderComponent = RenderActor->GetRenderComponent(PairIt.Key);
 				check(RenderComponent);
-
+				RenderComponent->CalcLocalBounds();
+				if (RenderComponent->Bounds.ContainsNaN())
+				{
+					UE_LOG(LogTemp,Log,TEXT("Fuck!"));
+				}
 				RenderComponent->BatchUpdateInstancesTransforms
 				(
 					0,
@@ -109,7 +113,11 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 			{
 				UInstancedStaticMeshComponent* RenderComponent = RenderActor->GetRenderComponent(PairIt.Key);
 				check(RenderComponent);
-
+				RenderComponent->CalcLocalBounds();
+				if (RenderComponent->Bounds.ContainsNaN())
+				{
+					UE_LOG(LogTemp, Log, TEXT("Fuck!"));
+				}
 				RenderComponent->AddInstances
 				(
 					PairIt.Value,
