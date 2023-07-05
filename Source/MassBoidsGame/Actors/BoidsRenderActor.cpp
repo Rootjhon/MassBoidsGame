@@ -25,6 +25,7 @@ void ABoidsRenderActor::CreateNewRenderComponent(const FBoidsMeshFragment* MeshF
 		Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		Component->SetupAttachment(GetRootComponent());
 		Component->RegisterComponent();
+		Component->CalcLocalBounds();
 		
 		RenderComponents.Emplace(MeshFragment, Component);
 	}

@@ -41,8 +41,13 @@ void UBoidsMoveProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExec
 		
 		for (int32 Ndx = 0; Ndx < NumEntities; Ndx++)
 		{
+			float tempSize = Velocities[Ndx].Value.Size();
+			if (abs(tempSize - 0)<0.000001 )
+			{
+				tempSize = 1;
+			}
 			// Limit speed to MaxSpeed
-			Velocities[Ndx].Value = (Velocities[Ndx].Value / Velocities[Ndx].Value.Size()) * Speeds[Ndx].MaxSpeed;
+			Velocities[Ndx].Value = (Velocities[Ndx].Value / tempSize) * Speeds[Ndx].MaxSpeed;
 			// Update the location based on Velocity
 			Locations[Ndx].Location += Velocities[Ndx].Value * DeltaTime;
 		}

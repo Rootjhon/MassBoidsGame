@@ -9,6 +9,7 @@
 
 class UInstancedStaticMeshComponent;
 class UMassAgentComponent;
+class UStaticMeshComponent;
 
 /**
  * Actor responsible for Instanced Rendering of the Boids
@@ -28,5 +29,7 @@ public:
 	ABoidsRenderActor(const FObjectInitializer& ObjectInitializer);
 
 	void CreateNewRenderComponent(const FBoidsMeshFragment* MeshFragment);
+	//UInstancedStaticMeshComponent* GetRenderComponent(const FBoidsMeshFragment* MeshFragment);
 	UInstancedStaticMeshComponent* GetRenderComponent(const FBoidsMeshFragment* MeshFragment);
+	
 };
