@@ -42,15 +42,15 @@ void UBoidsMoveProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExec
 		for (int32 Ndx = 0; Ndx < NumEntities; Ndx++)
 		{
 			// Limit speed to MaxSpeed
-			FVector tempDir;
-			float tempLen;
-			if (Velocities[Ndx].Value.ContainsNaN())
-			{
-				UE_LOG(LogTemp, Log, TEXT("Fuck!"));
-			}
-			Velocities[Ndx].Value.ToDirectionAndLength(tempDir, tempLen);
-			Velocities[Ndx].Value = tempDir * FMath::Min(tempLen, Speeds[Ndx].MaxSpeed);
-			//Velocities[Ndx].Value = (Velocities[Ndx].Value / Velocities[Ndx].Value.Size()) * Speeds[Ndx].MaxSpeed;
+			//FVector tempDir;
+			//float tempLen;
+			//if (Velocities[Ndx].Value.ContainsNaN())
+			//{
+			//	UE_LOG(LogTemp, Log, TEXT("Fuck!"));
+			//}
+			//Velocities[Ndx].Value.ToDirectionAndLength(tempDir, tempLen);
+			//Velocities[Ndx].Value = tempDir * FMath::Min(tempLen, Speeds[Ndx].MaxSpeed);
+			Velocities[Ndx].Value = (Velocities[Ndx].Value / Velocities[Ndx].Value.Size()) * Speeds[Ndx].MaxSpeed;
 			// Update the location based on Velocity
 			if (Velocities[Ndx].Value.ContainsNaN())
 			{

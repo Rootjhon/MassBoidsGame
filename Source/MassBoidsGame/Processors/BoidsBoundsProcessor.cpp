@@ -50,10 +50,10 @@ void UBoidsBoundsProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 		const TConstArrayView<FBoidsLocationFragment> Locations = Context.GetFragmentView<FBoidsLocationFragment>();
 
 		const int32 NumEntities = Context.GetNumEntities();
+		const float& TurnRate = BoidsSettings->TurnBackRate;
 		
 		for (int32 Ndx = 0; Ndx < NumEntities; Ndx++)
 		{
-			const float& TurnRate = BoidsSettings->TurnBackRate;
 			const FVector& Location = Locations[Ndx].Location;
 			FVector& Velocity = Velocities[Ndx].Value;
 			
