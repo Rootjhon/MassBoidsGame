@@ -26,7 +26,7 @@ void ANormalActorSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
+    MoveActors(DeltaTime);
 }
 
 void ANormalActorSpawner::SpawnActors()
