@@ -80,6 +80,12 @@ void UBoidsBoundsProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 				Velocity.Y -= TurnRate * bMaxY;
 				Velocity.Z -= TurnRate * bMaxZ;
 			}
+
+			if (Velocity.ContainsNaN())
+			{
+				UE_LOG(LogTemp, Log, TEXT("Fuck!"));
+			}
+
 		}
 	});
 }

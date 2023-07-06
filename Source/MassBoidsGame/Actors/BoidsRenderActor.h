@@ -24,7 +24,7 @@ public:
 	/**
 	 * Instanced StaticMesh Component that renders all the boids
 	 */
-	TMap<const FBoidsMeshFragment*, UInstancedStaticMeshComponent*> RenderComponents;
+	TMap<const UStaticMesh*, UInstancedStaticMeshComponent*> RenderComponents;
 	
 	ABoidsRenderActor(const FObjectInitializer& ObjectInitializer);
 

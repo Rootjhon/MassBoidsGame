@@ -6,6 +6,7 @@ public class MassBoidsGame : ModuleRules
 {
     public MassBoidsGame(ReadOnlyTargetRules Target) : base(Target)
     {
+        OptimizeCode = CodeOptimization.InShippingBuildsOnly;
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicIncludePaths.AddRange(

@@ -64,8 +64,15 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 		{
 			const int32 NumEntities = Context.GetNumEntities();
 			const bool bNewlySpawned = Context.DoesArchetypeHaveTag<FBoidsSpawnTag>();
+			//const bool bNewlySpawned = false;
 
 			const FBoidsMeshFragment* SharedMesh = Context.GetConstSharedFragmentPtr<FBoidsMeshFragment>();
+
+			
+			if (bNewlySpawned)
+			{
+				UE_LOG(LogTemp, Log, TEXT("bNewlySpawned!"));
+			}
 
 			TArray<FTransform>& XForms = bNewlySpawned ? NewBoidXForms.FindOrAdd(SharedMesh) : BoidXForms.FindOrAdd(SharedMesh);
 			XForms.Reserve(XForms.Num() + NumEntities);
@@ -83,11 +90,12 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 					FVector::OneVector
 				));
 			}
+
 		});
 
 		{
 			QUICK_SCOPE_CYCLE_COUNTER(STAT_UpdateRenderComponents);
-			
+
 			// Update existing instances
 			for (auto&& PairIt : BoidXForms)
 			{
@@ -96,7 +104,7 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 				RenderComponent->CalcLocalBounds();
 				if (RenderComponent->Bounds.ContainsNaN())
 				{
-					UE_LOG(LogTemp,Log,TEXT("Fuck!"));
+					UE_LOG(LogTemp, Log, TEXT("Fuck!"));
 				}
 				RenderComponent->BatchUpdateInstancesTransforms
 				(
@@ -126,5 +134,7 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 				);
 			}
 		}
+
+		
 	}
 }
