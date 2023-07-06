@@ -68,12 +68,6 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 
 			const FBoidsMeshFragment* SharedMesh = Context.GetConstSharedFragmentPtr<FBoidsMeshFragment>();
 
-			
-			if (bNewlySpawned)
-			{
-				UE_LOG(LogTemp, Log, TEXT("bNewlySpawned!"));
-			}
-
 			TArray<FTransform>& XForms = bNewlySpawned ? NewBoidXForms.FindOrAdd(SharedMesh) : BoidXForms.FindOrAdd(SharedMesh);
 			XForms.Reserve(XForms.Num() + NumEntities);
 		
@@ -102,10 +96,6 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 				UInstancedStaticMeshComponent* RenderComponent = RenderActor->GetRenderComponent(PairIt.Key);
 				check(RenderComponent);
 				RenderComponent->CalcLocalBounds();
-				if (RenderComponent->Bounds.ContainsNaN())
-				{
-					UE_LOG(LogTemp, Log, TEXT("Fuck!"));
-				}
 				RenderComponent->BatchUpdateInstancesTransforms
 				(
 					0,
@@ -122,10 +112,6 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 				UInstancedStaticMeshComponent* RenderComponent = RenderActor->GetRenderComponent(PairIt.Key);
 				check(RenderComponent);
 				RenderComponent->CalcLocalBounds();
-				if (RenderComponent->Bounds.ContainsNaN())
-				{
-					UE_LOG(LogTemp, Log, TEXT("Fuck!"));
-				}
 				RenderComponent->AddInstances
 				(
 					PairIt.Value,
