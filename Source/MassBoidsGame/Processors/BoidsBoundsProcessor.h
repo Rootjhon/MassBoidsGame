@@ -30,4 +30,7 @@ public:
 	//virtual void Execute(UMassEntitySubsystem& EntitySubsystem, FMassExecutionContext& Context) override;
 	virtual void Execute(FMassEntityManager& EntityManager, FMassExecutionContext& Context) override;
 	// ~ end UMassProcessor interface
+
+private:
+	FBox BoundingBox;
 };

@@ -50,11 +50,11 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 	if (RenderActor)
 	{
 		// Create render components for each mesh that boids can have
-		Entities.ForEachEntityChunk(EntitySubsystem, Context, [&RenderActor] (FMassExecutionContext& Context)
-		{
-			const FBoidsMeshFragment* SharedMesh = Context.GetConstSharedFragmentPtr<FBoidsMeshFragment>();
-			RenderActor->CreateNewRenderComponent(SharedMesh);
-		});
+		//Entities.ForEachEntityChunk(EntitySubsystem, Context, [&RenderActor] (FMassExecutionContext& Context)
+		//{
+		//	const FBoidsMeshFragment* SharedMesh = Context.GetConstSharedFragmentPtr<FBoidsMeshFragment>();
+		//	RenderActor->CreateNewRenderComponent(SharedMesh);
+		//});
 
 		TMap<const FBoidsMeshFragment*, TArray<FTransform>> BoidXForms;
 		TMap<const FBoidsMeshFragment*, TArray<FTransform>> NewBoidXForms;
@@ -95,7 +95,6 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 			{
 				UInstancedStaticMeshComponent* RenderComponent = RenderActor->GetRenderComponent(PairIt.Key);
 				check(RenderComponent);
-				RenderComponent->CalcLocalBounds();
 				RenderComponent->BatchUpdateInstancesTransforms
 				(
 					0,
@@ -111,7 +110,6 @@ void UBoidsRenderProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 			{
 				UInstancedStaticMeshComponent* RenderComponent = RenderActor->GetRenderComponent(PairIt.Key);
 				check(RenderComponent);
-				RenderComponent->CalcLocalBounds();
 				RenderComponent->AddInstances
 				(
 					PairIt.Value,

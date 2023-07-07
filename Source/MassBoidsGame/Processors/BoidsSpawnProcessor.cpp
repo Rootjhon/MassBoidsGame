@@ -37,6 +37,7 @@ void UBoidsSpawnProcessor::ConfigureQueries()
 		.AddRequirement<FBoidsLocationFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All)
 		.AddRequirement<FMassVelocityFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All)
 		.AddRequirement<FBoidsSpeedFragment>(EMassFragmentAccess::ReadOnly, EMassFragmentPresence::All)
+		.AddConstSharedRequirement<FBoidsMeshFragment>(EMassFragmentPresence::All)
 		.AddTagRequirement<FBoidsSpawnTag>(EMassFragmentPresence::All);
 
 	Entities.RegisterWithProcessor(*this);
@@ -59,13 +60,17 @@ void UBoidsSpawnProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExe
 		FMassTransformsSpawnData& AuxData = Context.GetMutableAuxData().GetMutable<FMassTransformsSpawnData>();
 		TArray<FTransform>& Transforms = AuxData.Transforms;
 
+		ABoidsRenderActor* RenderActor = BoidsSubsystem->GetRenderActor();
 		const int32 NumSpawnTransforms = Transforms.Num();
-		if (NumSpawnTransforms)
+		if (NumSpawnTransforms && RenderActor)
 		{
 			int32 NumRequiredSpawnTransforms = 0;
-			Entities.ForEachEntityChunk(EntitySubsystem, Context, [&NumRequiredSpawnTransforms](const FMassExecutionContext& Context)
+			Entities.ForEachEntityChunk(EntitySubsystem, Context, [&NumRequiredSpawnTransforms, &RenderActor](const FMassExecutionContext& Context)
 			{
 				NumRequiredSpawnTransforms += Context.GetNumEntities();
+
+				const FBoidsMeshFragment* SharedMesh = Context.GetConstSharedFragmentPtr<FBoidsMeshFragment>();
+				RenderActor->CreateNewRenderComponent(SharedMesh);
 			});
 
 			const int32 NumToAdd = NumRequiredSpawnTransforms - NumSpawnTransforms;

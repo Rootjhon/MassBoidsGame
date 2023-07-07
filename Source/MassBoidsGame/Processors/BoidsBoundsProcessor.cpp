@@ -25,6 +25,10 @@ void UBoidsBoundsProcessor::Initialize(UObject& Owner)
 	
 	BoidsSettings = GetMutableDefault<UBoidsSettings>();
 	check(BoidsSettings);
+
+	const FVector MinExtent = FVector(-(BoidsSettings->Extent / 2.f));
+	const FVector MaxExtent = FVector((BoidsSettings->Extent / 2.f));
+	BoundingBox = FBox(MinExtent - BoidsSettings->TurnBackOffset, MaxExtent + BoidsSettings->TurnBackOffset);
 }
 
 void UBoidsBoundsProcessor::ConfigureQueries()
@@ -41,11 +45,6 @@ void UBoidsBoundsProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 	
 	Entities.ForEachEntityChunk(EntitySubsystem, Context, [this] (FMassExecutionContext& Context)
 	{
-		const FVector MinExtent = FVector(-(BoidsSettings->Extent / 2.f));
-		const FVector MaxExtent = FVector((BoidsSettings->Extent / 2.f));
-
-		const FBox BoundingBox = FBox(MinExtent - BoidsSettings->TurnBackOffset, MaxExtent + BoidsSettings->TurnBackOffset);
-		
 		const TArrayView<FMassVelocityFragment> Velocities = Context.GetMutableFragmentView<FMassVelocityFragment>();
 		const TConstArrayView<FBoidsLocationFragment> Locations = Context.GetFragmentView<FBoidsLocationFragment>();
 
@@ -68,19 +67,20 @@ void UBoidsBoundsProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 				Velocity.Y += TurnRate * bMinY;
 				Velocity.Z += TurnRate * bMinZ;
 			}
-
-			const bool bMaxX = Location.X > BoundingBox.Max.X;
-			const bool bMaxY = Location.Y > BoundingBox.Max.Y;
-			const bool bMaxZ = Location.Z > BoundingBox.Max.Z;
-
-			// Turn back if outside maximum bounds
-			if (bMaxX || bMaxY || bMaxZ)
+			else
 			{
-				Velocity.X -= TurnRate * bMaxX;
-				Velocity.Y -= TurnRate * bMaxY;
-				Velocity.Z -= TurnRate * bMaxZ;
-			}
+				const bool bMaxX = Location.X > BoundingBox.Max.X;
+				const bool bMaxY = Location.Y > BoundingBox.Max.Y;
+				const bool bMaxZ = Location.Z > BoundingBox.Max.Z;
 
+				// Turn back if outside maximum bounds
+				if (bMaxX || bMaxY || bMaxZ)
+				{
+					Velocity.X -= TurnRate * bMaxX;
+					Velocity.Y -= TurnRate * bMaxY;
+					Velocity.Z -= TurnRate * bMaxZ;
+				}
+			}
 		}
 	});
 }

@@ -18,29 +18,31 @@ ABoidsRenderActor::ABoidsRenderActor(const FObjectInitializer& ObjectInitializer
 
 void ABoidsRenderActor::CreateNewRenderComponent(const FBoidsMeshFragment* MeshFragment)
 {
-	if (MeshFragment && MeshFragment->BoidMesh->HasValidRenderData(false) && !RenderComponents.Contains(MeshFragment->BoidMesh))
+	if (MeshFragment)
 	{
-		UInstancedStaticMeshComponent* Component = NewObject<UInstancedStaticMeshComponent>(this);
-		Component->SetStaticMesh(MeshFragment->BoidMesh);
-		Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		Component->SetupAttachment(GetRootComponent());
-		Component->RegisterComponent();
-		Component->CalcLocalBounds();
-		RenderComponents.Emplace(MeshFragment->BoidMesh, Component);
+		UStaticMesh* tempMesh = MeshFragment->BoidMesh;
+		if (!RenderComponents.Contains(tempMesh))
+		{
+			UInstancedStaticMeshComponent* Component = NewObject<UInstancedStaticMeshComponent>(this);
+			Component->SetStaticMesh(tempMesh);
+			Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Component->SetupAttachment(GetRootComponent());
+			Component->RegisterComponent();
+			RenderComponents.Emplace(tempMesh, Component);
+		}
 	}
 }
 
 UInstancedStaticMeshComponent* ABoidsRenderActor::GetRenderComponent(const FBoidsMeshFragment* MeshFragment)
 {
-	if (MeshFragment && MeshFragment->BoidMesh->HasValidRenderData(false) && RenderComponents.Contains(MeshFragment->BoidMesh))
+	if (MeshFragment)
 	{
-		UInstancedStaticMeshComponent* Component = RenderComponents[MeshFragment->BoidMesh];
-		//return RenderComponents[MeshFragment];
-		if (Component->Bounds.ContainsNaN())
+		UStaticMesh* tempMesh = MeshFragment->BoidMesh;
+		if (RenderComponents.Contains(tempMesh))
 		{
-			UE_LOG(LogTemp, Log, TEXT("Fuck!"));
+			UInstancedStaticMeshComponent* Component = RenderComponents[tempMesh];
+			return Component;
 		}
-		return Component;
 	}
 
 	return nullptr;

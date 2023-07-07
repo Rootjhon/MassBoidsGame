@@ -18,73 +18,73 @@ UBoidsRuleProcessor::UBoidsRuleProcessor(const FObjectInitializer& ObjectInitial
 
 void UBoidsRuleProcessor::Initialize(UObject& Owner)
 {
-	Super::Initialize(Owner);
-	
-	BoidsSettings = GetMutableDefault<UBoidsSettings>();
-	check(BoidsSettings);
+	//Super::Initialize(Owner);
+	//
+	//BoidsSettings = GetMutableDefault<UBoidsSettings>();
+	//check(BoidsSettings);
 
-	const int32 NumGridsSqrt = BoidsSettings->Extent / BoidsSettings->GridSize;
-	const int32 NumGrids = NumGridsSqrt * NumGridsSqrt;
+	//const int32 NumGridsSqrt = BoidsSettings->Extent / BoidsSettings->GridSize;
+	//const int32 NumGrids = NumGridsSqrt * NumGridsSqrt;
 
-	BoidsPerGrid.AddDefaulted(NumGrids);
-	BoidsGrid.AddDefaulted(NumGrids);
+	//BoidsPerGrid.AddDefaulted(NumGrids);
+	//BoidsGrid.AddDefaulted(NumGrids);
 }
 
 void UBoidsRuleProcessor::ConfigureQueries()
 {
-	Entities
-		.AddRequirement<FBoidsLocationFragment>(EMassFragmentAccess::ReadOnly, EMassFragmentPresence::All)
-		.AddRequirement<FMassVelocityFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All);
-	Entities.RegisterWithProcessor(*this);
+	//Entities
+	//	.AddRequirement<FBoidsLocationFragment>(EMassFragmentAccess::ReadOnly, EMassFragmentPresence::All)
+	//	.AddRequirement<FMassVelocityFragment>(EMassFragmentAccess::ReadWrite, EMassFragmentPresence::All);
+	//Entities.RegisterWithProcessor(*this);
 }
 
 void UBoidsRuleProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExecutionContext& Context)
 {
-	QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidsRuleProcessor);
+	//QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidsRuleProcessor);
 
-	TArray<const FVector*> AllLocations;
-	TArray<FVector*> AllVelocities;
+	//TArray<const FVector*> AllLocations;
+	//TArray<FVector*> AllVelocities;
 
-	// Get locations and velocities for all entities
-	Entities.ForEachEntityChunk(EntitySubsystem, Context, [&AllLocations, &AllVelocities] (FMassExecutionContext& Context)
-	{
-		const TConstArrayView<FBoidsLocationFragment>& Locations = Context.GetFragmentView<FBoidsLocationFragment>();
-		const TArrayView<FMassVelocityFragment>& Velocities = Context.GetMutableFragmentView<FMassVelocityFragment>();
+	//// Get locations and velocities for all entities
+	//Entities.ForEachEntityChunk(EntitySubsystem, Context, [&AllLocations, &AllVelocities] (FMassExecutionContext& Context)
+	//{
+	//	const TConstArrayView<FBoidsLocationFragment>& Locations = Context.GetFragmentView<FBoidsLocationFragment>();
+	//	const TArrayView<FMassVelocityFragment>& Velocities = Context.GetMutableFragmentView<FMassVelocityFragment>();
 
-		for (int32 Ndx = 0; Ndx < Context.GetNumEntities(); Ndx++)
-		{
-			AllLocations.Add(&Locations[Ndx].Location);
-			AllVelocities.Add(&Velocities[Ndx].Value);
-		}
-	});
+	//	for (int32 Ndx = 0; Ndx < Context.GetNumEntities(); Ndx++)
+	//	{
+	//		AllLocations.Add(&Locations[Ndx].Location);
+	//		AllVelocities.Add(&Velocities[Ndx].Value);
+	//	}
+	//});
 
 	// TODO: Make sure no other thread is writing to FMassVelocityFragment at the same time
 	// Ideally we should be able to pass in a boolean to ForEachEntityChunk to specify if we 
 	// want to ClearExecutionData so that we can do it manually. 
 
-	const int32 NumBoids = AllVelocities.Num();
+	//const int32 NumBoids = AllVelocities.Num();
 
-	// Calculates the grid of each boid
-	SetupBoidsGrid(AllLocations, NumBoids);
+	//// Calculates the grid of each boid
+	//SetupBoidsGrid(AllLocations, NumBoids);
 
-	// Get all the rules for each boid
-	{
-		QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidRules);
-		
-		RunBoidsAlignment(AllLocations, NumBoids);
-		RunBoidsSeparation(AllLocations, NumBoids);
-		RunBoidsCohesion(AllLocations, AllVelocities, NumBoids);
-	}
+	//// Get all the rules for each boid
+	//{
+	//	QUICK_SCOPE_CYCLE_COUNTER(STAT_BoidRules);
+	//	
+	//	RunBoidsAlignment(AllLocations, NumBoids);
+	//	RunBoidsSeparation(AllLocations, NumBoids);
+	//	RunBoidsCohesion(AllLocations, AllVelocities, NumBoids);
+	//}
 
-	{
-		QUICK_SCOPE_CYCLE_COUNTER(STAT_ApplyBoidRules);
+	//{
+	//	QUICK_SCOPE_CYCLE_COUNTER(STAT_ApplyBoidRules);
 
-		// Apply all of the rules to the boids
-		ParallelFor(NumBoids, [this, &AllVelocities] (int32 Ndx)
-		{
-			(*AllVelocities[Ndx]) += BoidAlignments[Ndx] + BoidSeparations[Ndx] + BoidCohesions[Ndx];
-		});
-	}
+	//	// Apply all of the rules to the boids
+	//	ParallelFor(NumBoids, [this, &AllVelocities] (int32 Ndx)
+	//	{
+	//		(*AllVelocities[Ndx]) += BoidAlignments[Ndx] + BoidSeparations[Ndx] + BoidCohesions[Ndx];
+	//	});
+	//}
 }
 
 void UBoidsRuleProcessor::SetupBoidsGrid(TArray<const FVector*>& BoidLocations, const int32 NumBoids)

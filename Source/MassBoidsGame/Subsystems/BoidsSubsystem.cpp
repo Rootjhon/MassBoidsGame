@@ -23,7 +23,6 @@ void UBoidsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	SimulationSubsystem = MyWorld->GetSubsystem<UMassSimulationSubsystem>(MyWorld);
 	check(SimulationSubsystem);
 	
-	//EntitySubsystem = UWorld::GetSubsystem<UMassEntitySubsystem>(MyWorld);
 	EntitySubsystem = MyWorld->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager().AsShared();
 	check(EntitySubsystem);
 
