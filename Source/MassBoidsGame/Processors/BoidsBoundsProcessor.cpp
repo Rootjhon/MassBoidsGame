@@ -50,37 +50,69 @@ void UBoidsBoundsProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassEx
 
 		const int32 NumEntities = Context.GetNumEntities();
 		const float& TurnRate = BoidsSettings->TurnBackRate;
-		
-		for (int32 Ndx = 0; Ndx < NumEntities; Ndx++)
-		{
-			const FVector& Location = Locations[Ndx].Location;
-			FVector& Velocity = Velocities[Ndx].Value;
-			
-			const bool bMinX = Location.X < BoundingBox.Min.X;
-			const bool bMinY = Location.Y < BoundingBox.Min.Y;
-			const bool bMinZ = Location.Z < BoundingBox.Min.Z;
 
-			// Turn back if outside minimum bounds
-			if (bMinX || bMinY || bMinZ)
+		ParallelFor(NumEntities, [this, &Velocities, &Locations, &TurnRate](int32 Ndx)
 			{
-				Velocity.X += TurnRate * bMinX;
-				Velocity.Y += TurnRate * bMinY;
-				Velocity.Z += TurnRate * bMinZ;
-			}
-			else
-			{
-				const bool bMaxX = Location.X > BoundingBox.Max.X;
-				const bool bMaxY = Location.Y > BoundingBox.Max.Y;
-				const bool bMaxZ = Location.Z > BoundingBox.Max.Z;
+				const FVector& Location = Locations[Ndx].Location;
+				FVector& Velocity = Velocities[Ndx].Value;
 
-				// Turn back if outside maximum bounds
-				if (bMaxX || bMaxY || bMaxZ)
+				const bool bMinX = Location.X < BoundingBox.Min.X;
+				const bool bMinY = Location.Y < BoundingBox.Min.Y;
+				const bool bMinZ = Location.Z < BoundingBox.Min.Z;
+
+				// Turn back if outside minimum bounds
+				if (bMinX || bMinY || bMinZ)
 				{
-					Velocity.X -= TurnRate * bMaxX;
-					Velocity.Y -= TurnRate * bMaxY;
-					Velocity.Z -= TurnRate * bMaxZ;
+					Velocity.X += TurnRate * bMinX;
+					Velocity.Y += TurnRate * bMinY;
+					Velocity.Z += TurnRate * bMinZ;
 				}
-			}
-		}
+				else
+				{
+					const bool bMaxX = Location.X > BoundingBox.Max.X;
+					const bool bMaxY = Location.Y > BoundingBox.Max.Y;
+					const bool bMaxZ = Location.Z > BoundingBox.Max.Z;
+
+					// Turn back if outside maximum bounds
+					if (bMaxX || bMaxY || bMaxZ)
+					{
+						Velocity.X -= TurnRate * bMaxX;
+						Velocity.Y -= TurnRate * bMaxY;
+						Velocity.Z -= TurnRate * bMaxZ;
+					}
+				}
+			});
+		
+		//for (int32 Ndx = 0; Ndx < NumEntities; Ndx++)
+		//{
+		//	const FVector& Location = Locations[Ndx].Location;
+		//	FVector& Velocity = Velocities[Ndx].Value;
+		//	
+		//	const bool bMinX = Location.X < BoundingBox.Min.X;
+		//	const bool bMinY = Location.Y < BoundingBox.Min.Y;
+		//	const bool bMinZ = Location.Z < BoundingBox.Min.Z;
+
+		//	// Turn back if outside minimum bounds
+		//	if (bMinX || bMinY || bMinZ)
+		//	{
+		//		Velocity.X += TurnRate * bMinX;
+		//		Velocity.Y += TurnRate * bMinY;
+		//		Velocity.Z += TurnRate * bMinZ;
+		//	}
+		//	else
+		//	{
+		//		const bool bMaxX = Location.X > BoundingBox.Max.X;
+		//		const bool bMaxY = Location.Y > BoundingBox.Max.Y;
+		//		const bool bMaxZ = Location.Z > BoundingBox.Max.Z;
+
+		//		// Turn back if outside maximum bounds
+		//		if (bMaxX || bMaxY || bMaxZ)
+		//		{
+		//			Velocity.X -= TurnRate * bMaxX;
+		//			Velocity.Y -= TurnRate * bMaxY;
+		//			Velocity.Z -= TurnRate * bMaxZ;
+		//		}
+		//	}
+		//}
 	});
 }
