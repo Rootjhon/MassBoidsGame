@@ -39,20 +39,20 @@ void UBoidsMoveProcessor::Execute(FMassEntityManager& EntitySubsystem, FMassExec
 		const float DeltaTime = Context.GetDeltaTimeSeconds();
 		const int32 NumEntities = Context.GetNumEntities();
 
-		ParallelFor(NumEntities, [&Velocities, &Locations, &DeltaTime, &Speeds](int32 Ndx)
-			{
-				// Limit speed to MaxSpeed
-				Velocities[Ndx].Value = (Velocities[Ndx].Value / Velocities[Ndx].Value.Size()) * Speeds[Ndx].MaxSpeed;
-				// Update the location based on Velocity
-				Locations[Ndx].Location += Velocities[Ndx].Value * DeltaTime;
-			});
+		//ParallelFor(NumEntities, [&Velocities, &Locations, &DeltaTime, &Speeds](int32 Ndx)
+		//	{
+		//		// Limit speed to MaxSpeed
+		//		Velocities[Ndx].Value = (Velocities[Ndx].Value / Velocities[Ndx].Value.Size()) * Speeds[Ndx].MaxSpeed;
+		//		// Update the location based on Velocity
+		//		Locations[Ndx].Location += Velocities[Ndx].Value * DeltaTime;
+		//	});
 		
-		//for (int32 Ndx = 0; Ndx < NumEntities; Ndx++)
-		//{
-		//	// Limit speed to MaxSpeed
-		//	Velocities[Ndx].Value = (Velocities[Ndx].Value / Velocities[Ndx].Value.Size()) * Speeds[Ndx].MaxSpeed;
-		//	// Update the location based on Velocity
-		//	Locations[Ndx].Location += Velocities[Ndx].Value * DeltaTime;
-		//}
+		for (int32 Ndx = 0; Ndx < NumEntities; Ndx++)
+		{
+			// Limit speed to MaxSpeed
+			Velocities[Ndx].Value = (Velocities[Ndx].Value / Velocities[Ndx].Value.Size()) * Speeds[Ndx].MaxSpeed;
+			// Update the location based on Velocity
+			Locations[Ndx].Location += Velocities[Ndx].Value * DeltaTime;
+		}
 	});
 }
