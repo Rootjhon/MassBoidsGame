@@ -1,10 +1,10 @@
 // Copyright Dennis Andersson. All Rights Reserved.
 
 
+#include "InstancedActorSpawner.h"
 #include "MoveActor.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/InstancedStaticMeshComponent.h"
-#include "Actors/InstancedActorSpawner.h"
 
 // Sets default values
 AInstancedActorSpawner::AInstancedActorSpawner()
